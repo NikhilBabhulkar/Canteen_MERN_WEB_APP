@@ -13,12 +13,13 @@ exports.signup = async (req, res) => {
       return res.status(400).json({ msg: 'User already exists' });
     }
 
+    
+    // // Hash password
+    // const salt = await bcrypt.genSalt(10);
+    // password = await bcrypt.hash(password, salt);
+
     // Create new user
     user = new User({ name, email, number, collegeId, username, password });
-
-    // Hash password
-    const salt = await bcrypt.genSalt(10);
-    user.password = await bcrypt.hash(password, salt);
 
     await user.save();
 
@@ -36,7 +37,7 @@ exports.signup = async (req, res) => {
     });
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server error');
+    res.status(500).send('Server error nahi h');
   }
 };
 
