@@ -1,47 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { FaTrash } from "react-icons/fa";
-import { ToastContainer, toast } from 'react-toastify';
+import {  toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import question from "../img/user.png";
 // import { usePaystackPayment } from 'react-paystack';
 import "../styles/checkoutBtn.css";
+import { useCart } from "../context/cartcontext";
 
-interface CartItem {
-  id: string;
-  img: string;
-  title: string;
-  amount: number;
-  price: number;
-}
 
-interface CartProps {
-  cart: CartItem[];
-  setCart: React.Dispatch<React.SetStateAction<CartItem[]>>;
-  handleChange: (item: CartItem, value: number) => void;
-}
-
-const Cart = ({ cart, setCart, handleChange }: CartProps) => {
+const Cart = () => {
   const [price, setPrice] = useState(0);
-
-  const handleRemove = (id: string) => {
-    const arr = cart.filter((item) => item.id !== id);
-    setCart(arr);
-    handlePrice();
-    toast.error("Item removed from cart", {
-      position: "top-center",
-      autoClose: 1000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
-  };
-
+  
+  const [balance, setbalance] = useState<string>("");
+  const { cart, handleChange,handleRemove } =useCart();
+  const[userid,setUserid]=useState<string>("");
   const handlePrice = () => {
     let ans = 0;
-    cart.forEach((item) => (ans += item.amount * item.price));
+    cart.forEach((item:any) => (ans += item.amount * item.price));
     setPrice(ans);
   };
 
@@ -52,11 +27,74 @@ const Cart = ({ cart, setCart, handleChange }: CartProps) => {
 
 // Purchase Item: || Decrement Balance:
   const handlepayment =()=>{
+    try {
+      const data={price:price,userid:userid};
+      console.log("data",data);
+      // Make a POST request to your login endpoint with form data
+     // const response = await axios.post("/api/buyitem", data);
 
+      // Assuming your login API returns a success message or token
+     // console.log(response.data);
+
+     toast.success('Payment Done Successfully', {
+      position: "top-center",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+     
+    } catch (error) {
+      // Handle login error
+      console.error("Payment failed:", error);
+      toast.error('Payment failed', {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  }
+
+  const checkbalance =()=>{
+    try {
+      const data={userid:userid};
+      console.log("data",data);
+      // Make a POST request to your login endpoint with form data
+     // const response = await axios.post("/api/checkbalance", data);
+
+      // Assuming your login API returns a success message or token
+     // console.log(response.data);
+
+     //setbalance(response.data.balance);
+   
+    } catch (error) {
+      // Handle login error
+      console.error("error checking balance:", error);
+      toast.error('Error checking balance', {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
   }
 
   return (
     <>
+    
+  
       <section className="w-full align-center items-center mx-auto container flex justify-center">
         <section className="mt-8 px-8 text-black">
           {cart.length === 0 ? (
@@ -66,7 +104,7 @@ const Cart = ({ cart, setCart, handleChange }: CartProps) => {
             </div>
 
           ) : (
-            cart.map((item) => (
+            cart.map((item:any) => (
               <div className="flex items-center justify-between mt-10 pb-2 border-b-2" key={item.id}>
                 <div className="flex w-80">
                   <img src={item.img} alt="" className="w-20 h-16" />
@@ -116,18 +154,23 @@ const Cart = ({ cart, setCart, handleChange }: CartProps) => {
                   type="text"
                   autoComplete="college ID"
                   required
+                  
+                  onChange={(e)=>setUserid(e.target.value)}
                   className="block w-2/3 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-brandColor placeholder:text-gray-400 focus:ring-2 focus:ring-inset  sm:text-lg sm:leading-6 outline-none px-2"
                 />
               </div>
+             <div onClick={checkbalance} className="mt-2 text-lg font-bold text-brandColor cursor-pointer">Check Balance:  <span className="text-black font-normal ml-10">{balance}</span></div>
+            
+             
+             
               <section className="flex justify-between mt-12">
                 <button onClick={handlepayment} className="flex w-full justify-center rounded-md bg-[#4290f5] px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-[#0255c2] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Pay</button>
               </section>
             </>
           )}
-
+</section>
         </section>
-      </section>
-      <ToastContainer />
+     
     </>
   );
 };

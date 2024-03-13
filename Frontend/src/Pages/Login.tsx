@@ -1,20 +1,63 @@
 import React from "react";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { useLogin } from "../context/logincontext";
+import axios from "axios";
 
-function Login() {
+import {  toast } from 'react-toastify';
+interface FormData {
+  email: string;
+  password: string;
+}
 
-  const nav=useNavigate();
+const Login: React.FC = () => {
+  const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
+  const navigate = useNavigate();
+  const { setLogin } = useLogin();
 
-  // Login 
-  const hadalelogin =()=>{
-    console.log("login");
-    localStorage.setItem("isLogin", "true");
-    nav('/');
-  }
+  // Handle form submission
+  const onSubmit = async (data: FormData) => {
+    console.log(data);
+    try {
+      // Make a POST request to your login endpoint with form data
+     // const response = await axios.post("/api/adminlogin", data);
+
+      // Assuming your login API returns a success message or token
+     // console.log(response.data);
+
+      // Perform login action
+      setLogin(true);
+
+      toast.success('Login Success', {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      // Redirect to home page
+      navigate("/");
+    } catch (error) {
+      // Handle login error
+      console.error("Login failed:", error);
+      toast.error('Login failed', {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
 
   return (
     <>
-      
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-10 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <img
@@ -28,7 +71,7 @@ function Login() {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-6" action="#" method="POST">
+          <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
             <div>
               <label
                 htmlFor="email"
@@ -39,12 +82,18 @@ function Login() {
               <div className="mt-2">
                 <input
                   id="email"
-                  name="email"
+                 
                   type="email"
                   autoComplete="email"
-                  required
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-lg sm:leading-6 outline-none px-2"
+                
+                  {...register("email", { required: true })}
+                  className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-lg sm:leading-6 outline-none px-2 ${
+                    errors.email ? 'border-red-500' : ''
+                  }`}
                 />
+                {errors.email && (
+                  <span className="text-red-500">Email is required</span>
+                )}
               </div>
             </div>
 
@@ -56,24 +105,30 @@ function Login() {
                 >
                   Password
                 </label>
-                <div className="text-sm">
+                {/* <div className="text-sm">
                   <a
                     href="#"
                     className="font-semibold text-[#4290f5]  hover:text-[#0255c2]"
                   >
                     Forgot password?
                   </a>
-                </div>
+                </div> */}
               </div>
               <div className="mt-2">
                 <input
                   id="password"
-                  name="password"
+                  
                   type="password"
                   autoComplete="current-password"
-                  required
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-lg sm:leading-6 outline-none px-2"
+                  
+                  {...register("password", { required: true })}
+                  className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-lg sm:leading-6 outline-none px-2 ${
+                    errors.password ? 'border-red-500' : ''
+                  }`}
                 />
+                {errors.password && (
+                  <span className="text-red-500">Password is required</span>
+                )}
               </div>
             </div>
 
@@ -81,18 +136,15 @@ function Login() {
               <button
                 type="submit"
                 className="flex w-full justify-center rounded-md bg-[#4290f5] px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-[#0255c2] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                onClick={hadalelogin}
               >
                 Sign in
               </button>
             </div>
           </form>
-
-          
         </div>
       </div>
     </>
   );
-}
+};
 
 export default Login;

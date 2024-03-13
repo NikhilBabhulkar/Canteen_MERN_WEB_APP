@@ -1,33 +1,30 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import Login from "./Pages/Login";
-import Shop from "./Components/Shop";
 import NotFound from "./Pages/NotFound";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   Navigate,
+  useNavigate,
 } from "react-router-dom";
 import img from "./img/small-screen.svg";
 import Payment from "./Components/Payment";
 import Register from "./Components/Register";
+import SideBar from "./Components/SideBar";
+import TopSect from "./Components/TopSect";
+import { CartProvider } from "./context/cartcontext";
+import Cart from "./Components/Cart";
+import Details from "./Components/Details";
+import { ToastContainer } from "react-toastify";
+import { LoginProvider, useLogin } from "./context/logincontext";
+import ProtectedRoute from "./Components/protectedroute";
 
 const App = () => {
-  const [login, setLogin] = useState(false);
   //code to disable app display on screens smaller than 1024px
-  const [isSmallScreen, setIsSmallScreen] = useState(localStorage.getItem('isLogin') === 'true');
-
-  const handleLogin=()=>{
-    localStorage.setItem("isLogin","true");
-    setLogin(true);
-  }
-
-  const handleLogout=()=>{
-    localStorage.removeItem('isLogin');
-    setLogin(false);
-  }
-
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
+  const { login } = useLogin();
 
   useEffect(() => {
     const handleResize = () => {
@@ -38,7 +35,6 @@ const App = () => {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-    
   }, []);
 
   return (
@@ -51,46 +47,65 @@ const App = () => {
           <img src={img} className="mt-8" alt="for large screen size only" />
         </div>
       ) : (
-        <>
+      <>
+        <ToastContainer />
+        <CartProvider>
           <Router>
-            <Routes>
-              <Route
-                path="/"
-                element={
-                  login ? (
-                    <Shop  />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-              <Route path="/login" element={<Login  />} />
-              <Route
-                path="/payment"
-                element={
-                  login ? (
-                    <Payment />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-              <Route
-                path="/register"
-                element={
-                  login ? (
-                    <Register />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
+            {login && <TopSect />}
 
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+            <div className="flex">
+              {login && <SideBar />}
+
+              <div className="flex-1">
+                <section className="flex flex-col ml-24 mt-16 px-8 pt-8  bg-bgColor">
+                  <Routes>
+                    <Route
+                      path=""
+                      element={
+                        <ProtectedRoute loginreq={true} element={<Details />} />
+                      }
+                    />
+                    <Route
+                      path="/cart"
+                      element={
+                        <ProtectedRoute loginreq={true} element={<Cart />} />
+                      }
+                    />
+                    <Route
+                      path="/payment"
+                      element={
+                        <ProtectedRoute loginreq={true} element={<Payment />} />
+                      }
+                    />
+                    <Route
+                      path="/register"
+                      element={
+                        <ProtectedRoute
+                          loginreq={true}
+                          element={<Register />}
+                        />
+                      }
+                    />
+                    <Route
+                      path="/login"
+                      element={
+                        <ProtectedRoute loginreq={false} element={<Login />} />
+                      }
+                    />
+
+                    {/* Other protected routes */}
+                    <Route path="/login" element={<Login />} />
+                    {/* Other unprotected routes */}
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                  {/* Other code */}
+                </section>
+              </div>
+            </div>
           </Router>
-        </>
-      )}
+        </CartProvider>
+      </>
+      )} 
     </div>
   );
 };

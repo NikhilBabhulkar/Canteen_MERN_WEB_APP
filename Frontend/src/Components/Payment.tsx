@@ -1,19 +1,61 @@
-import React, { useState } from "react";
-import SideBar from "./SideBar";
+import React from "react";
+import { useForm, SubmitHandler } from "react-hook-form"
+
+import {toast } from 'react-toastify';
+type Inputs = {
+  userId: string
+  amount: string
+}
 
 function Payment() {
-  const [balance, setBalance] = useState(0);
-  const [amountToAdd, setAmountToAdd] = useState("");
 
-  // Increment Balance:
-  const handleAddBalance = () => {
-    
-    
-  };
+  
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<Inputs>()
+  const onSubmit: SubmitHandler<Inputs> = (data) =>{
+    console.log(data);
+    try {
+      // Make a POST request to your login endpoint with form data
+     // const response = await axios.post("/api/addmoney", data);
+
+      // Assuming your login API returns a success message or token
+     // console.log(response.data);
+     toast.success('Amount Credited Successfully', {
+      position: "top-center",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+
+    } catch (error) {
+      // Handle login error
+      console.error("Payment failed:", error);
+      toast.error('Payment failed', {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+    //handle add payment request here//
+  } 
+
 
   return (
     <>
-      <SideBar />
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <img
@@ -22,12 +64,12 @@ function Payment() {
             alt="Your Company"
           />
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-           Add Amount 
+            Add Amount
           </h2>
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-6" action="#" method="POST">
+          <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
             <div>
               <label
                 htmlFor="userId"
@@ -38,33 +80,29 @@ function Payment() {
               <div className="mt-2">
                 <input
                   id="userId"
-                  name="userId"
                   type="text"
-                  // autoComplete="userId"
-                  required
+                  {...register("userId", { required: true })}
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-lg sm:leading-6 outline-none px-2"
                 />
+                {errors.userId && <span className="text-red-500">User ID is required</span>}
               </div>
             </div>
 
             <div>
-              <div className="flex items-center justify-between">
-                <label
-                  htmlFor="amount"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                 Amount (INR)
-                </label>
-              </div>
+              <label
+                htmlFor="amount"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Amount (INR)
+              </label>
               <div className="mt-2">
                 <input
                   id="amount"
-                  name="amount"
                   type="text"
-                
-                  required
+                  {...register("amount", { required: true })}
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-lg sm:leading-6 outline-none px-2"
                 />
+                {errors.amount && <span className="text-red-500">Amount is required</span>}
               </div>
             </div>
 
@@ -77,7 +115,6 @@ function Payment() {
               </button>
             </div>
           </form>
-
         </div>
       </div>
     </>

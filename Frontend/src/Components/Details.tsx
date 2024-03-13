@@ -2,20 +2,12 @@ import React, { useState, useEffect } from "react";
 import Cards from "./Cards";
 import { list } from "../data";
 import { FaSearch } from "react-icons/fa";
+import { useCart } from "../context/cartcontext";
 
-interface CartItem {
-  id: string;
-  img: string;
-  title: string;
-  amount: number;
-  price: number;
-}
 
-interface DetailsProps {
-  handleClick: (item: any) => void;
-}
-
-function Details({ handleClick }: DetailsProps) {
+function Details() {
+  //{ handleClick }: DetailsProps
+  const {handleClick}=useCart();
   const [category, setCategory] = useState(list);
   const [activeTab, setActiveTab] = useState("All");
   const [categories, setCategories] = useState<string[]>([]); // State to store unique categories
@@ -92,6 +84,7 @@ function Details({ handleClick }: DetailsProps) {
               <Cards key={item.id} item={item} handleClick={handleClick} />
             ))}
         </section>
+      
       </section>
     </>
   );

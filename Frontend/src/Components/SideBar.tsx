@@ -4,19 +4,18 @@ import { FaCog, FaUser, FaSignOutAlt, FaUserAlt, FaRupeeSign } from "react-icons
 import { IoChatbubbleEllipsesSharp, IoRestaurant } from "react-icons/io5";
 import { IoIosHelpCircle, IoMdInformationCircle } from "react-icons/io";
 import { MdDashboard } from "react-icons/md";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useLogin } from "../context/logincontext";
 
 
-const Icon = ({ icon }: { icon: JSX.Element }) => (
-  <li>
-    <Link to="/"><p>{icon}</p></Link>
-  </li>
-);
 
 function SideBar() {
-
+  const{setLogin}=useLogin();
+  const nav=useNavigate();
+  
   const handllogout=()=>{
-
+    setLogin(false);
+    nav("/login");
   }
   return (
     <header>
@@ -33,8 +32,8 @@ function SideBar() {
         <div className="side-icon"><Link to="/settings"><FaCog title="Settings"/></Link></div> */}
       </div>
 
-      <div className="bottom-menu">
-        <a onClick={()=>localStorage.clear()} href="/login"><FaSignOutAlt title="Logout"/></a>
+      <div className="bottom-menu text-brandColor text-2xl">
+        <FaSignOutAlt onClick={handllogout} title="Logout"/>
       </div>
 
     </header>
