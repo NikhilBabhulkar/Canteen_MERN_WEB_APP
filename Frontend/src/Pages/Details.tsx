@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Cards from "./Cards";
+import Cards from "../Components/Cards";
 import { list } from "../data";
 import { FaSearch } from "react-icons/fa";
 import { useCart } from "../context/cartcontext";

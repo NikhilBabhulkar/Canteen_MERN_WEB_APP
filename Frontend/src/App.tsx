@@ -10,13 +10,13 @@ import {
   useNavigate,
 } from "react-router-dom";
 import img from "./img/small-screen.svg";
-import Payment from "./Components/Payment";
-import Register from "./Components/Register";
+import Payment from "./Pages/Payment";
+import Register from "./Pages/Register";
 import SideBar from "./Components/SideBar";
 import TopSect from "./Components/TopSect";
 import { CartProvider } from "./context/cartcontext";
-import Cart from "./Components/Cart";
-import Details from "./Components/Details";
+import Cart from "./Pages/Cart";
+import Details from "./Pages/Details";
 import { ToastContainer } from "react-toastify";
 import { LoginProvider, useLogin } from "./context/logincontext";
 import ProtectedRoute from "./Components/protectedroute";
@@ -93,8 +93,7 @@ const App = () => {
                       }
                     />
 
-                    {/* Other protected routes */}
-                    <Route path="/login" element={<Login />} />
+                    
                     {/* Other unprotected routes */}
                     <Route path="*" element={<NotFound />} />
                   </Routes>
