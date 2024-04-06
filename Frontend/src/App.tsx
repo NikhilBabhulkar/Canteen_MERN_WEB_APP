@@ -46,64 +46,74 @@ const App = () => {
           </p>
           <img src={img} className="mt-8" alt="for large screen size only" />
         </div>
-      ) : (
-      <>
-        <ToastContainer />
-        <CartProvider>
-          <Router>
-            {login && <TopSect />}
+      ) : ( 
+        <>
+          <ToastContainer />
+          <CartProvider>
+            <Router>
+              {login && <TopSect />}
 
-            <div className="flex">
-              {login && <SideBar />}
+              <div className="flex">
+                {login && <SideBar />}
 
-              <div className="flex-1">
-                <section className="flex flex-col ml-24 mt-16 px-8 pt-8  bg-bgColor">
-                  <Routes>
-                    <Route
-                      path=""
-                      element={
-                        <ProtectedRoute loginreq={true} element={<Details />} />
-                      }
-                    />
-                    <Route
-                      path="/cart"
-                      element={
-                        <ProtectedRoute loginreq={true} element={<Cart />} />
-                      }
-                    />
-                    <Route
-                      path="/payment"
-                      element={
-                        <ProtectedRoute loginreq={true} element={<Payment />} />
-                      }
-                    />
-                    <Route
-                      path="/register"
-                      element={
-                        <ProtectedRoute
-                          loginreq={true}
-                          element={<Register />}
-                        />
-                      }
-                    />
-                    <Route
-                      path="/login"
-                      element={
-                        <ProtectedRoute loginreq={false} element={<Login />} />
-                      }
-                    />
+                <div className="flex-1">
+                  <section className="flex flex-col ml-24 mt-16 px-8 pt-8  bg-bgColor">
+                    <Routes>
+                      <Route
+                        path=""
+                        element={
+                          <ProtectedRoute
+                            loginreq={true}
+                            element={<Details />}
+                          />
+                        }
+                      />
+                      <Route
+                        path="/cart"
+                        element={
+                          <ProtectedRoute 
+                          loginreq={true} 
+                          element={<Cart />} />
+                        }
+                      />
+                      <Route
+                        path="/payment"
+                        element={
+                          <ProtectedRoute
+                            loginreq={true}
+                            element={<Payment />}
+                          />
+                        }
+                      />
+                      <Route
+                        path="/register"
+                        element={
+                          <ProtectedRoute
+                            loginreq={true}
+                            element={<Register />}
+                          />
+                        }
+                      />
+                      <Route
+                        path="/login"
+                        element={
+                          <ProtectedRoute
+                            loginreq={false}
+                            element={<Login />}
+                          />
+                        }
+                      />
 
-                    
-                    {/* Other unprotected routes */}
-                    <Route path="*" element={<NotFound />} />
-                  </Routes>
-                  {/* Other code */}
-                </section>
+                      {/* Other unprotected routes */}
+                      <Route path="*" element={<NotFound />} />
+                    </Routes>
+                    {/* Other code */}
+                  </section>
+                </div>
               </div>
-            </div>
-          </Router>
-        </CartProvider>
-      </>
+            </Router>
+          </CartProvider>
+        </>
       )} 
     </div>
   );

@@ -1,9 +1,11 @@
+import axios from "axios";
 import React from "react";
 import { useForm, SubmitHandler } from "react-hook-form"
 
 import {toast } from 'react-toastify';
+
 type Inputs = {
-  userId: string
+  collegeId: string
   amount: string
 }
 
@@ -17,14 +19,14 @@ function Payment() {
     watch,
     formState: { errors },
   } = useForm<Inputs>()
-  const onSubmit: SubmitHandler<Inputs> = (data) =>{
+  const onSubmit: SubmitHandler<Inputs> = async (data) =>{
     console.log(data);
     try {
       // Make a POST request to your login endpoint with form data
-     // const response = await axios.post("/api/addmoney", data);
+     const response = await axios.put("http://localhost:5000/api/admin/user/increment-balance", data);
 
       // Assuming your login API returns a success message or token
-     // console.log(response.data);
+     console.log(response.data);
      toast.success('Amount Credited Successfully', {
       position: "top-center",
       autoClose: 2000,
@@ -72,19 +74,19 @@ function Payment() {
           <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
             <div>
               <label
-                htmlFor="userId"
+                htmlFor="collegeId"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
                 User ID
               </label>
               <div className="mt-2">
                 <input
-                  id="userId"
+                  id="collegeId"
                   type="text"
-                  {...register("userId", { required: true })}
+                  {...register("collegeId", { required: true })}
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-lg sm:leading-6 outline-none px-2"
                 />
-                {errors.userId && <span className="text-red-500">User ID is required</span>}
+                {errors.collegeId && <span className="text-red-500">User ID is required</span>}
               </div>
             </div>
 

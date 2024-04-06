@@ -1,43 +1,53 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import axios from "axios";
+import { toast } from "react-toastify";
 
-import {  toast } from 'react-toastify';
 interface FormData {
   name: string;
   email: string;
   collegeId: string;
   number: string;
+  password:string;
 }
 
 const Register: React.FC = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>();
 
+  const [userID, setUserId] = useState();
   // Handle form submission
-  const onSubmit = (data: FormData) => {
+  const onSubmit = async (data: FormData) => {
     console.log(data);
     //handel register request here//
     try {
       // Make a POST request to your login endpoint with form data
-     // const response = await axios.post("/api/adduser", data);
+      const response = await axios.post(
+        "http://localhost:5000/api/user/adduser",
+        data
+      );
 
       // Assuming your login API returns a success message or token
-     // console.log(response.data);
-
-     toast.success('User Registered Successfully', {
-      position: "top-center",
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
-     
+      console.log(response.data);
+      // alert(response.data.user);
+      setUserId(response.data.user);
+      toast.success("User Registered Successfully..!!", {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
     } catch (error) {
       // Handle login error
       console.error("Registeration failed:", error);
-      toast.error('Registeration failed', {
+      toast.error("Registeration failed", {
         position: "top-center",
         autoClose: 2000,
         hideProgressBar: false,
@@ -80,7 +90,9 @@ const Register: React.FC = () => {
                   {...register("name", { required: true })}
                   className="block w-full rounded-md border-0 py-1.5  text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-lg sm:leading-6 outline-none px-2"
                 />
-                {errors.name && <span className="text-red-500">Name is required</span>}
+                {errors.name && (
+                  <span className="text-red-500">Name is required</span>
+                )}
               </div>
             </div>
 
@@ -98,7 +110,9 @@ const Register: React.FC = () => {
                   {...register("email", { required: true })}
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-lg sm:leading-6 outline-none px-2"
                 />
-                {errors.email && <span className="text-red-500">Email is required</span>}
+                {errors.email && (
+                  <span className="text-red-500">Email is required</span>
+                )}
               </div>
             </div>
             <div>
@@ -115,7 +129,9 @@ const Register: React.FC = () => {
                   {...register("collegeId", { required: true })}
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-lg sm:leading-6 outline-none px-2"
                 />
-                {errors.collegeId && <span className="text-red-500">College ID is required</span>}
+                {errors.collegeId && (
+                  <span className="text-red-500">College ID is required</span>
+                )}
               </div>
             </div>
 
@@ -133,7 +149,29 @@ const Register: React.FC = () => {
                   {...register("number", { required: true })}
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-lg sm:leading-6 outline-none px-2"
                 />
-                {errors.number && <span className="text-red-500">Mobile No. is required</span>}
+                {errors.number && (
+                  <span className="text-red-500">Mobile No. is required</span>
+                )}
+              </div>
+            </div>
+
+            <div>
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Password
+              </label>
+              <div className="mt-2">
+                <input
+                  id="password"
+                  type="password"
+                  {...register("password", { required: true })}
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-lg sm:leading-6 outline-none px-2"
+                />
+                {errors.password && (
+                  <span className="text-red-500">Enter password is required</span>
+                )}
               </div>
             </div>
             <div>
@@ -145,10 +183,18 @@ const Register: React.FC = () => {
               </button>
             </div>
           </form>
+
+          {/* {userID ? (
+            <div className="mt-5 text-brandColor font-semibold">
+              <p>User ID is : {userID}</p>
+            </div>
+          ) : (
+            <div></div>
+          )} */}
         </div>
       </div>
     </>
   );
-}
+};
 
 export default Register;

@@ -20,10 +20,10 @@ const Login: React.FC = () => {
     console.log(data);
     try {
       // Make a POST request to your login endpoint with form data
-     // const response = await axios.post("/api/adminlogin", data);
+     const response = await axios.post("http://localhost:5000/api/admin/login", data);
 
       // Assuming your login API returns a success message or token
-     // console.log(response.data);
+     console.log(response.data);
 
       // Perform login action
       setLogin(true);
