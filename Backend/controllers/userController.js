@@ -62,4 +62,31 @@ const getUserById = async (req, res) => {
   }
 };
 
-module.exports = { updateUser,getUserProfile ,getUserById};
+const createUser = async (req, res) => {
+  const { name, email,  number, collegeId, password } = req.body;
+
+  try {
+    let user = await User.findOne({ $or: [{ email: email }, { collegeId: collegeId }] });
+
+    if (user) {
+      return res.status(400).json({ message: 'User already exists' });
+    }
+
+    user = new User({
+      name,
+      email,
+      number,
+      collegeId,
+      password,
+      balance: 0 
+    });
+
+    await user.save();
+    res.status(201).json({ message: 'User created successfully', user:user._id });
+  } catch (error) {
+    console.error('Error creating user:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+module.exports = { updateUser,getUserProfile ,getUserById, createUser};
